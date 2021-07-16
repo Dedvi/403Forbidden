@@ -1,0 +1,29 @@
+{
+  "name": "403Forbidden",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dedvi/403Forbidden.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Dedvi/403Forbidden/issues"
+  },
+  "homepage": "https://github.com/Dedvi/403Forbidden#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "helmet": "^4.6.0"
+  },
+  "devDependencies": {
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.12"
+  }
+}
