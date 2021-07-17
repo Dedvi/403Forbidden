@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.get('/', (req, res) => {
   res.json({
-    message: 'Artilingo API - 👋🌎'
+    message: "Artilingo's highly sophisticated API 😂, 👋🌎"
   });
 });
 
