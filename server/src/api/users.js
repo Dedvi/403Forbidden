@@ -87,8 +87,17 @@ router.post('/signup', async (req, res, next) => {
 
   try{
     await schema.validateAsync({email, password});
-    const inserted = await users.insert({email, password: await hashPassword(password)})
-    res.json(inserted);
+    const user = await users.findOne({email})
+
+    if (!user){
+      const inserted = await users.insert({email, password: await hashPassword(password)})
+      res.json(inserted);
+    } else {
+      res.json({
+        message: 'Email already exists'
+      });
+      next()
+    }
   } catch(error) {
     next(error)
   }
