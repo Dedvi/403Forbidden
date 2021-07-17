@@ -51,7 +51,7 @@ function generateAccessToken(username) {
   return jwt.sign(username, tokenSecret, { expiresIn: '1800s' });
 }
 
-// TODO: Get One User by Id
+// Get One User by Id
 router.get('/', authenticateToken, async (req, res, next) => {
   res.json(req.user);
 });
