@@ -44,6 +44,35 @@ router.post('/bookmark', authenticateToken, async (req, res, next) => {
   }
 });
 
+// Mark an article in progress for a user
+router.get('/start', authenticateToken, async (req, res, next) => {
+  const {slug} = req.body
+  const {email} = req.user
+  try {
+    const article = await articles.findOne({slug});
+    if (!article) return next()
+    const user = await users.findOneAndUpdate({email}, { $addToSet: { in_progress: article } });
+    res.json(user)
+  } catch (error) {
+    next(error)
+  }
+});
+
+// Mark an article complete for a user
+router.get('/complete', authenticateToken, async (req, res, next) => {
+  const {slug} = req.body
+  const {email} = req.user
+  try {
+    const article = await articles.findOne({slug});
+    if (!article) return next()
+    await users.findOneAndUpdate({email}, { $pull: { in_progress: { _id: article._id} } });
+    const user = await users.findOneAndUpdate({email}, { $addToSet: { completed: article } });
+    res.json(user)
+  } catch (error) {
+    next(error)
+  }
+});
+
 // Get Single article
 router.get('/:slug', authenticateToken, async (req, res, next) => {
   const {slug} = req.params
