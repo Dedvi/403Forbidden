@@ -51,6 +51,7 @@ router.get('/start', authenticateToken, async (req, res, next) => {
   try {
     const article = await articles.findOne({slug});
     if (!article) return next()
+    // Add Article to in_prgress list
     const user = await users.findOneAndUpdate({email}, { $addToSet: { in_progress: article } });
     res.json(user)
   } catch (error) {
@@ -65,9 +66,11 @@ router.get('/complete', authenticateToken, async (req, res, next) => {
   try {
     const article = await articles.findOne({slug});
     if (!article) return next()
-    await users.findOneAndUpdate({email}, { $pull: { in_progress: { _id: article._id} } });
+    // Add Article to completed list
     const user = await users.findOneAndUpdate({email}, { $addToSet: { completed: article } });
-    res.json(user)
+    // Remove the article from inprogress Array and Add 10 to points
+    const userData = await users.findOneAndUpdate({email}, { $pull: { in_progress: { _id: article._id} }, $set: { points: user.points + 10 } });
+    res.json(userData)
   } catch (error) {
     next(error)
   }

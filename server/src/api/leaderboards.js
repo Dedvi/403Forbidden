@@ -9,21 +9,14 @@ const users = db.get('users')
 
 const router = express.Router();
 
-// TODO: Show the leaderboard for all users
+// Show the leaderboard for all users
 router.get('/', authenticateToken, async (req, res, next) => {
   try {
-    const user = await users.find({}, ['name', 'email'] )
+    const user = await users.find({}, {fields: { in_progress: 0, completed: 0 }, sort: {points: -1}} )
     res.json(user)
   } catch (error) {
     next(error)
   }
-});
-
-// TODO: Increase Users points with user id passed in.
-router.post('/:id', (req, res) => {
-  res.json({
-    message: 'increase Points'
-  });
 });
 
 module.exports = router;

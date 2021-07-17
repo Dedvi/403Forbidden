@@ -15,9 +15,14 @@ const tokenSecret = process.env.TOKEN_SECRET
 const router = express.Router();
 
 // Create Validation Schema
-const schema = Joi.object({
-    email: Joi.string().email({ minDomainSegments: 2 }),
-    password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
+const newUser = Joi.object({
+    username: Joi.string().alphanum().required(),
+    email: Joi.string().email({ minDomainSegments: 2 }).required(),
+    password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required(),
+})
+const loginUser = Joi.object({
+    email: Joi.string().email({ minDomainSegments: 2 }).required(),
+    password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required(),
 })
 
 // Password Hashing
@@ -48,7 +53,7 @@ const comparePassword = async (password, hash) => {
 
 // Generate a JWT
 function generateAccessToken(username) {
-  return jwt.sign(username, tokenSecret, { expiresIn: '1800s' });
+  return jwt.sign(username, tokenSecret, { expiresIn: '8640000' });
 }
 
 // Get One User by Id
@@ -61,7 +66,7 @@ router.post('/signin', async (req, res, next) => {
   const {email, password} = req.body
 
   try{
-    await schema.validateAsync({email, password});
+    await loginUser.validateAsync({email, password});
     const user = await users.findOne({email})
 
     // Return true if password matches
@@ -83,14 +88,14 @@ router.post('/signin', async (req, res, next) => {
 
 // Signup a user with new credentials
 router.post('/signup', async (req, res, next) => {
-  const {email, password} = req.body
+  const {email, password, username} = req.body
 
   try{
-    await schema.validateAsync({email, password});
+    await newUser.validateAsync({email, password, username});
     const user = await users.findOne({email})
 
     if (!user){
-      const inserted = await users.insert({email, password: await hashPassword(password)})
+      const inserted = await users.insert({email, password: await hashPassword(password), username, points: 0})
       res.json(inserted);
     } else {
       res.json({
