@@ -13,7 +13,8 @@ export default {
     return { articles}
   },
   created(){
-    this.$store.commit('CHANGE_BACKGROUND_LAYOUT', true)
+    this.$store.commit('CHANGE_BACKGROUND_LAYOUT', false)
+    this.$store.commit('SHOW_SEARCH_BAR', true)
   }
 }
 </script>
