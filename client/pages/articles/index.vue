@@ -6,6 +6,8 @@
 
 <script>
 export default {
+  middleware: 'auth',
+  auth : 'guest',
   auth: true,
   layout: "loggedin",
   async asyncData({ $axios }) {

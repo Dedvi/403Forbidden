@@ -21,6 +21,7 @@
 
 <script>
 export default {
+  middleware: 'auth',
   auth: true,
   layout: "loggedin",
   data() {
