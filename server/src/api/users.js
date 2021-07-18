@@ -58,7 +58,13 @@ function generateAccessToken(username) {
 
 // Get One User by Id
 router.get('/', authenticateToken, async (req, res, next) => {
-  res.json(req.user);
+  const {email} = req.user
+  try{
+    const user = await users.findOne({email})
+    res.json({user: user})
+  } catch(error) {
+    next(error)
+  }
 });
 
 // Login a user with credentials and pass token
@@ -95,7 +101,7 @@ router.post('/signup', async (req, res, next) => {
     const user = await users.findOne({email})
 
     if (!user){
-      const inserted = await users.insert({email, password: await hashPassword(password), username, points: 0})
+      const inserted = await users.insert({email, password: await hashPassword(password), username, points: 0, daily_streak: 0})
       res.json(inserted);
     } else {
       res.json({
