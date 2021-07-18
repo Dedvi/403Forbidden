@@ -18,6 +18,7 @@ const transationSchema = Joi.object({
 
 const dictionarySchema = Joi.object({
     word: Joi.string().alphanum().required(),
+    rusWord: Joi.string().required(),
 })
 
 // translateString('Hello', 'English', 'Hindi');
@@ -39,24 +40,39 @@ router.post('/', authenticateToken, async (req, res, next) => {
 });
 
 router.post('/define', authenticateToken, async (req, res, next) => {
-    const { word } = req.body
+    const { word, rusWord } = req.body
     try {
         const lang = "en_US"
-        await dictionarySchema.validateAsync({ word });
+        const langTo = "ru"
+        await dictionarySchema.validateAsync({ word, rusWord });
         let url = "https://api.dictionaryapi.dev/api/v2/entries/" + lang + "/" + word;
 
         let settings = { method: "Get" };
         //store phonetics and definitions (phonetics are in article language meaning is in native language)
         const phonetics = [];
+        const rusPhonetics = [];
 
-        fetch(url, settings)
+        await fetch(url, settings)
             .then(res => res.json())
             .then((json) => {
                 for (let i = 0; i < json[0].phonetics.length; i++) {
                     phonetics.push([json[0].phonetics[i].text, json[0].phonetics[i].audio])
                 }
-                res.json({ orginal: word, phonetics, lang });
             });
+
+        let url2 = encodeURI("https://api.dictionaryapi.dev/api/v2/entries/" + langTo + "/" + rusWord);
+
+        await fetch(url2, settings)
+            .then(res => res.json())
+            .then((json) => {
+                for (let i = 0; i < json[0].meanings.length; i++) {
+                    rusPhonetics.push([json[0].meanings[i].partOfSpeech, json[0].meanings[i].definitions[0].definition]);
+                }
+            });
+
+            
+        res.json({ orginal: word, russian: rusWord, phonetics, rusPhonetics });
+
     } catch (error) {
         next(error);
     }
