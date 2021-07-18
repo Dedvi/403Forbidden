@@ -10,6 +10,7 @@ export default {
     },
   },
   plugins: [
+    require('windicss/plugin/aspect-ratio'),
     require('windicss/plugin/forms'),
   ],
 }

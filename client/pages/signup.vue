@@ -6,13 +6,17 @@
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
       </svg>
     </nuxt-link>
-    <nuxt-link to="/signup" class="block bg-yellow-500 text-blue-900 py-3 px-6 text-center uppercase font-bold text-lg rounded-3xl">Sign up</nuxt-link>
+    <nuxt-link to="/login" class="block bg-yellow-500 text-blue-900 py-3 px-6 text-center uppercase font-bold text-lg rounded-3xl">Sign in</nuxt-link>
   </div>
   <div class="flex flex-1 justify-center items-center">
     <div class="w-full max-w-md">
-      <h1 class="text-yellow-500 tracking-wide text-5xl font-bold text-center mb-12">Log in</h1>
-      <form @submit.prevent="userLogin">
+      <h1 class="text-yellow-500 tracking-wide text-5xl font-bold text-center mb-12">Sign up</h1>
+      <form @submit.prevent="userSignup">
         <div class="flex flex-col mt-6">
+          <label class="m-2" for="text">Username</label>
+          <input class="rounded-3xl border-2 border-dark-50 border-opacity-10 bg-gray-50" type="text" name="text" placeholder="Username" v-model="login.username" />
+        </div>
+        <div class="flex flex-col mt-2">
           <label class="m-2" for="email">Email</label>
           <input class="rounded-3xl border-2 border-dark-50 border-opacity-10 bg-gray-50" type="text" name="email" placeholder="Email" v-model="login.email" />
         </div>
@@ -20,7 +24,7 @@
           <label class="m-2" for="password">Password</label>
           <input class="rounded-3xl border-2 border-dark-50 border-opacity-10 bg-gray-50" type="text" name="password" placeholder="Password" v-model="login.password" />
         </div>
-        <button class="mt-12 block bg-yellow-500 text-blue-900 py-4 w-full text-center uppercase font-extrabold text-xl rounded-3xl" type="submit">Log in</button>
+        <button class="mt-12 block bg-yellow-500 text-blue-900 py-4 w-full text-center uppercase font-extrabold text-xl rounded-3xl" type="submit">Create my account</button>
       </form>
       <div class="mt-6 flex items-center justify-center">
         <div class="w-full h-0.5 bg-gray-200 flex flex-1 mr-2"></div>
@@ -36,7 +40,7 @@
             <path fill="#EA4335" d="M -14.754 43.989 C -12.984 43.989 -11.404 44.599 -10.154 45.789 L -6.734 42.369 C -8.804 40.429 -11.514 39.239 -14.754 39.239 C -19.444 39.239 -23.494 41.939 -25.464 45.859 L -21.484 48.949 C -20.534 46.099 -17.884 43.989 -14.754 43.989 Z"/>
           </g>
         </svg>
-        Login with Google
+        Singup with Google
       </button>
       <p class="mt-6 text-center font-base text-gray-600">By signing in to Artilingo, you agree to our Terms and Privacy Policy.</p>
     </div>
@@ -50,8 +54,9 @@ export default {
   data() {
     return {
       login: {
-        email: 'me@janiru.dev',
-        password: '12345678'
+        username: '',
+        email: '',
+        password: ''
       },
       loading: false
     }
@@ -60,13 +65,14 @@ export default {
     googleAuth(){
       alert("Feature Coming Soon...!")
     },
-    async userLogin() {
+    async userSignup() {
       try {
         this.loading = true
-        await this.$auth.loginWith('local', { data: this.login })
+        await this.$axios.$post('/api/v1/user/signup', { username: this.login.username, email: this.login.email, password: this.login.password })
+        this.$router.push({path: '/login'})
       } catch (err) {
-        this.loading = false
         console.error(err)
+        this.loading = false
       }
       this.loading = false
     }

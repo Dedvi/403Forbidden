@@ -8,7 +8,7 @@
     </div>
     <div class="flex-1 flex">
       <sidebar class="bg-blue-gray-900 w-80 flex-none"/>
-      <main>
+      <main class="flex-1 overflow-y-auto">
         <Nuxt />
       </main>
     </div>
