@@ -58,38 +58,3 @@ router.get('/', authenticateToken, async (req, res, next) => {
 });
 
 module.exports = router;
-
-
-const lang = "en_US";
-const langTo = "ru";
-const word = "hello";
-const wordTranslated = "Привет"
-
-
-
-
-
-
-
-////////////////////////////////
-
-
-// translateString('Hello', 'English', 'Hindi');
-
-router.get('/', authenticateToken, async (req, res, next) => {
-    const { text, from, to } = req.body
-    try {
-        await transationSchema.validateAsync({ text, from, to });
-        const translated = await translate(text, { from, to });
-        res.json({
-            orginal: text,
-            translated,
-            from,
-            to
-        });
-    } catch (error) {
-        next(error);
-    }
-});
-
-module.exports = router;
