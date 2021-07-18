@@ -101,7 +101,17 @@ router.post('/signup', async (req, res, next) => {
     const user = await users.findOne({email})
 
     if (!user){
-      const inserted = await users.insert({email, password: await hashPassword(password), username, points: 0, daily_streak: 0})
+      const inserted = await users.insert({
+        email,
+        password: await hashPassword(password),
+        username,
+        points: 0,
+        daily_streak: 0,
+        profile_picture: '/user_image.png',
+        fluent_at: '',
+        learning_in: '',
+        interested_in: ''
+      })
       res.json(inserted);
     } else {
       res.json({
@@ -112,7 +122,6 @@ router.post('/signup', async (req, res, next) => {
   } catch(error) {
     next(error)
   }
-
 });
 
 module.exports = router;

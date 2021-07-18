@@ -11,14 +11,14 @@ translate.url = "https://libretranslate.de/translate";
 
 // Create Validation Schema
 const transationSchema = Joi.object({
-    text: Joi.string().alphanum().required(),
+    text: Joi.string().required().trim().lowercase(),
     from: Joi.string().alphanum().required(),
     to: Joi.string().alphanum().required(),
 })
 
 const dictionarySchema = Joi.object({
-    word: Joi.string().alphanum().required(),
-    rusWord: Joi.string().required(),
+    word: Joi.string().required().trim().lowercase(),
+    rusWord: Joi.string().required().trim().lowercase(),
 })
 
 // translateString('Hello', 'English', 'Hindi');
@@ -55,6 +55,7 @@ router.post('/define', authenticateToken, async (req, res, next) => {
         await fetch(url, settings)
             .then(res => res.json())
             .then((json) => {
+                if (json.title == 'No Definitions Found') return
                 for (let i = 0; i < json[0].phonetics.length; i++) {
                     phonetics.push([json[0].phonetics[i].text, json[0].phonetics[i].audio])
                 }
@@ -65,8 +66,10 @@ router.post('/define', authenticateToken, async (req, res, next) => {
         await fetch(url2, settings)
             .then(res => res.json())
             .then((json) => {
-                for (let i = 0; i < json[0].meanings.length; i++) {
-                    rusPhonetics.push([json[0].meanings[i].partOfSpeech, json[0].meanings[i].definitions[0].definition]);
+                console.log(json)
+                if (json.title == 'No Definitions Found') return
+                for (let i = 0; i < json[0].meanings?.length; i++) {
+                    rusPhonetics.push([json[0].meanings[i]?.partOfSpeech, json[0].meanings[i]?.definitions[0].definition]);
                 }
             });
 

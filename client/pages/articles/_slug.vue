@@ -14,7 +14,7 @@
   <h1 class="font-bold text-4xl mb-12">{{article.name}}</h1>
     <div id="text" v-html="$md.render(article.text)"></div>
     <translation-model v-if="translateModel" :open="translateModel" :selected="selectedText" @close="closeModel"/>
-    <quiz-model v-if="quizPopup" :open="quizPopup" :article="article" @close="closeModel"/>
+    <quiz-model v-if="quizPopup" :open="quizPopup" :article="article" @close="closeModel2"/>
     <button @click="quizPopup = true" class="mt-24 mb-12 block mx-auto motion-safe:transition ease-in-out duration-300 bg-yellow-500 text-blue-900 hover:bg-blue-900 hover:text-yellow-500 py-4 px-10 text-center uppercase font-extrabold text-base rounded-3xl" type="submit">Mark Complete</button>
   </div>
 </template>

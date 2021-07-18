@@ -45,7 +45,7 @@ router.post('/bookmark', authenticateToken, async (req, res, next) => {
 });
 
 // Mark an article in progress for a user
-router.get('/start', authenticateToken, async (req, res, next) => {
+router.post('/start', authenticateToken, async (req, res, next) => {
   const {slug} = req.body
   const {email} = req.user
   try {
@@ -60,7 +60,7 @@ router.get('/start', authenticateToken, async (req, res, next) => {
 });
 
 // Mark an article complete for a user
-router.get('/complete', authenticateToken, async (req, res, next) => {
+router.post('/complete', authenticateToken, async (req, res, next) => {
   const {slug} = req.body
   const {email} = req.user
   try {

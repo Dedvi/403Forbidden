@@ -1,6 +1,6 @@
 <template>
   <div class="w-full pl-10">
-    <article-grid title="Popular Articles" :articles="articles" />
+    <article-grid title="Articles" :articles="articles" />
   </div>
 </template>
 
