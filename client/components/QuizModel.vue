@@ -47,6 +47,7 @@ export default {
         this.message = "Wow, you have answered correctly, Good Job! (+10 Points)"
 
         await this.$axios.$post(`/api/v1/articles/complete`, {slug: this.$route.params.slug});
+        this.$auth.fetchUser()
 
         setTimeout(() => {this.$router.push('/articles')}, 2500)
       } else {
